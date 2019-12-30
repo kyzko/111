@@ -1,0 +1,1 @@
+/usr/bin/mpic++  -g   CMakeFiles/untitled2.dir/main.cpp.o  -o untitled2  -L/usr/local/lib  -L/usr/local/opt/llvm/lib 

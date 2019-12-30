@@ -32,7 +32,7 @@ int** TranspMatrix (int **Matrix, int& n, int& m)
     return tMatrix;
 }
 
-int** TranspMatrixMPI (int **Matrix, int& n, int& m, int rank, int size)
+int** TranspMatrixMPI (int **Matrix, int& n, int& m, int rank, int size, int irr, int ii)
 {
     int **a = InitMatrix(m, n);
     int **b = InitMatrix(n, m);
@@ -49,8 +49,8 @@ int** TranspMatrixMPI (int **Matrix, int& n, int& m, int rank, int size)
     for(irr = 0; irr<size; irr++){
         MPI_Waitany(size, req, &ir, &status);
         ir = status.MPI_SOURCE;
-        for(i = 0; i<nl; i++){
-            for(j = i+1; j<nl; j++){
+        for(i = 0; i<n; i++){
+            for(j = i+1; j<m; j++){
                 a[i][j]=b[j][i];
                 int temp = n;
                 n = m;
@@ -59,7 +59,14 @@ int** TranspMatrixMPI (int **Matrix, int& n, int& m, int rank, int size)
             }
         }
     }
+    for(i = 0; i<n; i++){
+        ii = i+rank*n;
+        if(ii<N)
+            for(j = 0; j<N; j++)
+                printf("process %d : a[%d][%d] = %lf b[%d][%d] = %lf\n", rank, ii, j, a[n][m], ii, j, b[m][n]);
+    }
 }
+
 
 int main(int argc, char **argv)
 {
